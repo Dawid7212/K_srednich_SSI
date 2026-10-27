@@ -8,17 +8,19 @@ namespace K_srednich_SSI
     public partial class Form1 : Form
     {
         public List<Punkt> rekordy = new List<Punkt>();
+        public List<Punkt> srodkiGrup = new List<Punkt>();
+        public int m = 4;
         public Form1()
         {
             InitializeComponent();
             PobierzDaneZCSV();
             WypiszDaneZCSV();
+            LosujSrodki(4);
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
         }
-
 
         public void PobierzDaneZCSV()
         {
@@ -28,7 +30,6 @@ namespace K_srednich_SSI
                     continue;
 
                 string[] wartosci = wiersz.Split(',');
-
 
                 Punkt punkt = new Punkt
                 {
@@ -80,10 +81,49 @@ namespace K_srednich_SSI
 
                 g.FillEllipse(kretka, x - promienPunktu, y - promienPunktu, promienPunktu * 2, promienPunktu * 2);
             }
+            foreach (var punkcik in srodkiGrup)
+            {
+                Brush kretka = Brushes.Black;
+                float x = srodekUkladuX + (float)punkcik.x * skala;
+                float y = srodekUkladuY + (float)punkcik.y * skala;
+                if (punkcik.klasa == 1)
+                {
+                    kretka = Brushes.Red;
+                }
+                if (punkcik.klasa == 2)
+                {
+                    kretka = Brushes.Blue;
+                }
+                if (punkcik.klasa == 3)
+                {
+                    kretka = Brushes.Green;
+                }
+                if (punkcik.klasa == 4)
+                {
+                    kretka = Brushes.Orange;
+                }
+
+                g.FillEllipse(kretka, x - promienPunktu, y - promienPunktu, promienPunktu * 3, promienPunktu * 3);
+            }
         }
         public double Euklides(Punkt a, Punkt b)
         {
             return (Math.Sqrt(Math.Pow(a.x - b.x, 2) + Math.Pow(a.y - b.y, 2)));
+        }
+        public void LosujSrodki(int ilosc)
+        {
+            Random rand = new Random();
+            List<Punkt> kopia = rekordy;
+            List<Punkt> listaLosowych = new List<Punkt>();
+
+
+            for (int i = 0; i < ilosc; i++)
+            {
+                int losowyIndex = rand.Next(kopia.Count);
+                Punkt wyloswany = kopia[losowyIndex];
+                srodkiGrup.Add(wyloswany.x, wyloswany.y, i + 1);
+                kopia.RemoveAt(losowyIndex);
+            }
         }
     }
 }
