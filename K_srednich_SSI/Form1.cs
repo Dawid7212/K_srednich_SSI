@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace K_srednich_SSI
 {
@@ -16,6 +17,7 @@ namespace K_srednich_SSI
             PobierzDaneZCSV();
             WypiszDaneZCSV();
             LosujSrodki(4);
+            przypiszPunktyDoSrodkow();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -121,8 +123,25 @@ namespace K_srednich_SSI
             {
                 int losowyIndex = rand.Next(kopia.Count);
                 Punkt wyloswany = kopia[losowyIndex];
-                srodkiGrup.Add(wyloswany.x, wyloswany.y, i + 1);
+                wyloswany.klasa = i + 1;
+                srodkiGrup.Add(wyloswany);
                 kopia.RemoveAt(losowyIndex);
+            }
+        }
+        public void przypiszPunktyDoSrodkow()
+        {
+            foreach (var punkcik in rekordy)
+            {
+                double odlegloscTmp = Euklides(punkcik, srodkiGrup[0]);
+                for (int i = 0; i < srodkiGrup.Count(); i++)
+                {
+                    double odleglosc = Euklides(punkcik, srodkiGrup[i]);
+                    if (odleglosc <= odlegloscTmp)
+                    {
+                        odlegloscTmp = odleglosc;
+                        punkcik.klasa = i+1;
+                    }
+                }
             }
         }
     }
