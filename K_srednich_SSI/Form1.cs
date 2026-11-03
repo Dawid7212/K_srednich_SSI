@@ -1,6 +1,7 @@
 using System;
 using System.Globalization;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 
@@ -11,17 +12,19 @@ namespace K_srednich_SSI
         public List<Punkt> rekordy = new List<Punkt>();
         public List<Punkt> srodkiGrup = new List<Punkt>();
         public int m = 4;
+        public int liczbaIeracji = 100;
         public Form1()
         {
             InitializeComponent();
             PobierzDaneZCSV();
             WypiszDaneZCSV();
             LosujSrodki(4);
-            przypiszPunktyDoSrodkow();
+            PrzypiszPunktyDoSrodkow();
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            label3.Text = liczbaIeracji.ToString();
         }
 
         public void PobierzDaneZCSV()
@@ -36,7 +39,7 @@ namespace K_srednich_SSI
                 Punkt punkt = new Punkt
                 {
                     x = double.Parse(wartosci[0], CultureInfo.InvariantCulture),
-                    y = double.Parse(wartosci[1], CultureInfo.InvariantCulture)*(-1)
+                    y = double.Parse(wartosci[1], CultureInfo.InvariantCulture) * (-1)
                 };
 
                 rekordy.Add(punkt);
@@ -90,22 +93,22 @@ namespace K_srednich_SSI
                 float y = srodekUkladuY + (float)punkcik.y * skala;
                 if (punkcik.klasa == 1)
                 {
-                    kretka = Brushes.Red;
+                    kretka = Brushes.DarkRed;
                 }
                 if (punkcik.klasa == 2)
                 {
-                    kretka = Brushes.Blue;
+                    kretka = Brushes.DarkBlue;
                 }
                 if (punkcik.klasa == 3)
                 {
-                    kretka = Brushes.Green;
+                    kretka = Brushes.DarkGreen;
                 }
                 if (punkcik.klasa == 4)
                 {
-                    kretka = Brushes.Orange;
+                    kretka = Brushes.DarkGoldenrod;
                 }
 
-                g.FillEllipse(kretka, x - promienPunktu, y - promienPunktu, promienPunktu * 3, promienPunktu * 3);
+                g.FillRectangle(kretka, x - promienPunktu, y - promienPunktu, promienPunktu * 2, promienPunktu * 2);
             }
         }
         public double Euklides(Punkt a, Punkt b)
@@ -128,7 +131,7 @@ namespace K_srednich_SSI
                 kopia.RemoveAt(losowyIndex);
             }
         }
-        public void przypiszPunktyDoSrodkow()
+        public void PrzypiszPunktyDoSrodkow()
         {
             foreach (var punkcik in rekordy)
             {
@@ -139,10 +142,54 @@ namespace K_srednich_SSI
                     if (odleglosc <= odlegloscTmp)
                     {
                         odlegloscTmp = odleglosc;
-                        punkcik.klasa = i+1;
+                        punkcik.klasa = i + 1;
                     }
                 }
             }
+        }
+        public void WyznaczNoweSrodki()
+        {
+            for (int i = 0; i < m; i++)
+            {
+                double x = 0;
+                double y = 0;
+                double ilosc = 0;
+                foreach (Punkt punkt in rekordy)
+                {
+                    if (punkt.klasa == i + 1)
+                    {
+                        x += punkt.x;
+                        y += punkt.y;
+                        ilosc++;
+                    }
+                }
+                srodkiGrup[i].x = x / ilosc;
+                srodkiGrup[i].y = y / ilosc;
+            }
+        }
+        public void GlownaPetla(int iter)
+        {
+            //int iter = 0;
+            for (int i = 0; i < iter; i++)
+            {
+                // var glebokaKopia = srodkiGrup.Select(item => (Punkt)item.Clone()).ToList();
+                PrzypiszPunktyDoSrodkow();
+                WyznaczNoweSrodki();
+                /* if (srodkiGrup == glebokaKopia)
+                 {
+                     i = 100;
+                 }   */
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            GlownaPetla(liczbaIeracji);
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            PB1.Invalidate();
         }
     }
 }

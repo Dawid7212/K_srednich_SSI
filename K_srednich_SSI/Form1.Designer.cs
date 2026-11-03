@@ -30,6 +30,10 @@
         {
             PB1 = new PictureBox();
             RTB1 = new RichTextBox();
+            label1 = new Label();
+            label3 = new Label();
+            button1 = new Button();
+            button2 = new Button();
             ((System.ComponentModel.ISupportInitialize)PB1).BeginInit();
             SuspendLayout();
             // 
@@ -53,12 +57,53 @@
             RTB1.TabIndex = 1;
             RTB1.Text = "";
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(651, 282);
+            label1.Name = "label1";
+            label1.Size = new Size(175, 15);
+            label1.TabIndex = 2;
+            label1.Text = "Liczba zadeklarowanych iteracji:";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(844, 282);
+            label3.Name = "label3";
+            label3.Size = new Size(0, 15);
+            label3.TabIndex = 4;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(755, 369);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 5;
+            button1.Text = "Start";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(674, 369);
+            button2.Name = "button2";
+            button2.Size = new Size(75, 23);
+            button2.TabIndex = 6;
+            button2.Text = "Refresh";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += button2_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             ClientSize = new Size(910, 510);
+            Controls.Add(button2);
+            Controls.Add(button1);
+            Controls.Add(label3);
+            Controls.Add(label1);
             Controls.Add(RTB1);
             Controls.Add(PB1);
             Margin = new Padding(3, 2, 3, 2);
@@ -67,11 +112,16 @@
             Load += Form1_Load;
             ((System.ComponentModel.ISupportInitialize)PB1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private PictureBox PB1;
         private RichTextBox RTB1;
+        private Label label1;
+        private Label label3;
+        private Button button1;
+        private Button button2;
     }
 }
