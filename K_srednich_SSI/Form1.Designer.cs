@@ -34,6 +34,10 @@
             label3 = new Label();
             button1 = new Button();
             button2 = new Button();
+            button3 = new Button();
+            label2 = new Label();
+            label4 = new Label();
+            RTB2 = new RichTextBox();
             ((System.ComponentModel.ISupportInitialize)PB1).BeginInit();
             SuspendLayout();
             // 
@@ -71,8 +75,9 @@
             label3.AutoSize = true;
             label3.Location = new Point(844, 282);
             label3.Name = "label3";
-            label3.Size = new Size(0, 15);
+            label3.Size = new Size(13, 15);
             label3.TabIndex = 4;
+            label3.Text = "0";
             // 
             // button1
             // 
@@ -94,12 +99,52 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // button3
+            // 
+            button3.Location = new Point(674, 408);
+            button3.Name = "button3";
+            button3.Size = new Size(76, 25);
+            button3.TabIndex = 7;
+            button3.Text = "+1 iteracja";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(655, 310);
+            label2.Name = "label2";
+            label2.Size = new Size(151, 15);
+            label2.TabIndex = 8;
+            label2.Text = "Liczba wykonanych iteracji:";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(825, 310);
+            label4.Name = "label4";
+            label4.Size = new Size(13, 15);
+            label4.TabIndex = 9;
+            label4.Text = "0";
+            // 
+            // RTB2
+            // 
+            RTB2.Location = new Point(668, 128);
+            RTB2.Name = "RTB2";
+            RTB2.Size = new Size(184, 138);
+            RTB2.TabIndex = 10;
+            RTB2.Text = "";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             ClientSize = new Size(910, 510);
+            Controls.Add(RTB2);
+            Controls.Add(label4);
+            Controls.Add(label2);
+            Controls.Add(button3);
             Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(label3);
@@ -123,5 +168,9 @@
         private Label label3;
         private Button button1;
         private Button button2;
+        private Button button3;
+        private Label label2;
+        private Label label4;
+        private RichTextBox RTB2;
     }
 }

@@ -13,13 +13,14 @@ namespace K_srednich_SSI
         public List<Punkt> srodkiGrup = new List<Punkt>();
         public int m = 4;
         public int liczbaIeracji = 100;
+        public int wykonaneIteracje = 0;
         public Form1()
         {
             InitializeComponent();
             PobierzDaneZCSV();
             WypiszDaneZCSV();
             LosujSrodki(4);
-            PrzypiszPunktyDoSrodkow();
+            //PrzypiszPunktyDoSrodkow();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -35,12 +36,10 @@ namespace K_srednich_SSI
                     continue;
 
                 string[] wartosci = wiersz.Split(',');
+                double x = double.Parse(wartosci[0], CultureInfo.InvariantCulture);
+                double y = double.Parse(wartosci[1], CultureInfo.InvariantCulture) * (-1);
 
-                Punkt punkt = new Punkt
-                {
-                    x = double.Parse(wartosci[0], CultureInfo.InvariantCulture),
-                    y = double.Parse(wartosci[1], CultureInfo.InvariantCulture) * (-1)
-                };
+                Punkt punkt = new Punkt(x, y);
 
                 rekordy.Add(punkt);
             }
@@ -118,7 +117,7 @@ namespace K_srednich_SSI
         public void LosujSrodki(int ilosc)
         {
             Random rand = new Random();
-            List<Punkt> kopia = rekordy;
+            List<Punkt> kopia = new List<Punkt>(rekordy);
             List<Punkt> listaLosowych = new List<Punkt>();
 
 
@@ -127,7 +126,7 @@ namespace K_srednich_SSI
                 int losowyIndex = rand.Next(kopia.Count);
                 Punkt wyloswany = kopia[losowyIndex];
                 wyloswany.klasa = i + 1;
-                srodkiGrup.Add(wyloswany);
+                srodkiGrup.Add(new Punkt(wyloswany.x, wyloswany.y, i + 1));
                 kopia.RemoveAt(losowyIndex);
             }
         }
@@ -149,22 +148,29 @@ namespace K_srednich_SSI
         }
         public void WyznaczNoweSrodki()
         {
-            for (int i = 0; i < m; i++)
+            for (int j = 0; j < m; j++)
             {
                 double x = 0;
                 double y = 0;
-                double ilosc = 0;
+                List<Punkt> Xgr = new List<Punkt>();
                 foreach (Punkt punkt in rekordy)
                 {
-                    if (punkt.klasa == i + 1)
+                    if (punkt.klasa == j + 1)
                     {
-                        x += punkt.x;
-                        y += punkt.y;
-                        ilosc++;
+                        Xgr.Add(punkt);
                     }
                 }
-                srodkiGrup[i].x = x / ilosc;
-                srodkiGrup[i].y = y / ilosc;
+                if (Xgr.Count() == 0)
+                {
+                    continue;
+                }
+                for (int i = 0; i < Xgr.Count(); i++)
+                {
+                    x += Xgr[i].x;
+                    y += Xgr[i].y;
+                }
+                srodkiGrup[j].x = x / Xgr.Count();
+                srodkiGrup[j].y = y / Xgr.Count();
             }
         }
         public void GlownaPetla(int iter)
@@ -172,14 +178,13 @@ namespace K_srednich_SSI
             //int iter = 0;
             for (int i = 0; i < iter; i++)
             {
-                // var glebokaKopia = srodkiGrup.Select(item => (Punkt)item.Clone()).ToList();
                 PrzypiszPunktyDoSrodkow();
                 WyznaczNoweSrodki();
-                /* if (srodkiGrup == glebokaKopia)
-                 {
-                     i = 100;
-                 }   */
+                wykonaneIteracje++;
             }
+            label4.Text = wykonaneIteracje.ToString();
+            DaneDoRaportu();
+            liczbaIeracji -= iter;
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -191,5 +196,48 @@ namespace K_srednich_SSI
         {
             PB1.Invalidate();
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            GlownaPetla(1);
+            PB1.Invalidate();
+        }
+        public void DaneDoRaportu()
+        {
+            RTB2.Clear();
+            foreach (Punkt srodek in srodkiGrup)
+            {
+                int iloscPunktow = 0;
+                double minX = 1000, minY = 1000;
+                double maxX = -1000, maxY = -1000;
+
+
+                foreach (Punkt punkt in rekordy)
+                {
+                    if (punkt.klasa == srodek.klasa)
+                    {
+                        iloscPunktow++;
+
+                        if (punkt.x < minX) minX = punkt.x;
+                        if (punkt.x > maxX) maxX = punkt.x;
+                        if (punkt.y < minY) minY = punkt.y;
+                        if (punkt.y > maxY) maxY = punkt.y;
+                    }
+                }
+
+                RTB2.AppendText("Grupa: "+srodek.klasa+ "\n");
+                RTB2.AppendText("Środek: " + srodek.x +", " + srodek.y +"\n");
+                RTB2.AppendText("Liczba próbek: "+iloscPunktow + "\n");
+
+                if (iloscPunktow > 0)
+                {
+                    RTB2.AppendText("X min: "+minX+", max: "+maxX+ "\n");
+                    RTB2.AppendText("Y min: "+minY+", max: "+maxY + "\n");
+                }
+
+                RTB2.AppendText("\n");
+            }
+        }
+
     }
 }
