@@ -1,3 +1,4 @@
+using CsvHelper.Configuration.Attributes;
 using System;
 using System.Globalization;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace K_srednich_SSI
     {
         public List<Punkt> rekordy = new List<Punkt>();
         public List<Punkt> srodkiGrup = new List<Punkt>();
+        public List<Punkt> StareSrodkiTmp = new List<Punkt>();
         public int m = 4;
         public int liczbaIeracji = 100;
         public int wykonaneIteracje = 0;
@@ -19,8 +21,10 @@ namespace K_srednich_SSI
             InitializeComponent();
             PobierzDaneZCSV();
             WypiszDaneZCSV();
-            LosujSrodki(4);
-            //PrzypiszPunktyDoSrodkow();
+            LosujSrodki(m);
+            PrzypiszPunktyDoSrodkow();
+            //DaneDoRaportu();
+            PB1.Invalidate();
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -114,6 +118,25 @@ namespace K_srednich_SSI
         {
             return (Math.Sqrt(Math.Pow(a.x - b.x, 2) + Math.Pow(a.y - b.y, 2)));
         }
+        public double Manhattan(Punkt a, Punkt b)
+        {
+            return (Math.Abs(a.x - b.x) + Math.Abs(a.y - b.y));
+        }
+        public double Czebyszew(Punkt a, Punkt b)
+        {
+            return Math.Max(Math.Abs(a.x - b.x), Math.Abs(a.y - b.y));
+        }
+        public double Minkowskiego(Punkt a, Punkt b, int mink)
+        {
+            if (mink >0)
+            {
+                return Math.Pow(Math.Pow(Math.Abs(a.x - b.x), mink) + Math.Pow(Math.Abs(a.y - b.y), mink), 1.0 / mink);
+            }
+            else
+            {
+                return 0;
+            }
+        }
         public void LosujSrodki(int ilosc)
         {
             Random rand = new Random();
@@ -179,12 +202,20 @@ namespace K_srednich_SSI
             for (int i = 0; i < iter; i++)
             {
                 PrzypiszPunktyDoSrodkow();
+                StareSrodkiTmp = srodkiGrup.Select(p => p.GlebokaKopia()).ToList();
                 WyznaczNoweSrodki();
                 wykonaneIteracje++;
+
+                bool sprawdzenie = PorownajListy(StareSrodkiTmp, srodkiGrup);
+                if (sprawdzenie == true)
+                {
+                    break;
+                }
             }
             label4.Text = wykonaneIteracje.ToString();
             DaneDoRaportu();
             liczbaIeracji -= iter;
+            PB1.Invalidate();
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -192,15 +223,9 @@ namespace K_srednich_SSI
             GlownaPetla(liczbaIeracji);
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-            PB1.Invalidate();
-        }
-
         private void button3_Click(object sender, EventArgs e)
         {
             GlownaPetla(1);
-            PB1.Invalidate();
         }
         public void DaneDoRaportu()
         {
@@ -226,7 +251,7 @@ namespace K_srednich_SSI
                 }
 
                 RTB2.AppendText("Grupa: "+srodek.klasa+ "\n");
-                RTB2.AppendText("Środek: " + srodek.x +", " + srodek.y +"\n");
+                RTB2.AppendText("Środek: " + srodek.x.ToString("F2") + ", " + srodek.y.ToString("F2") + "\n");
                 RTB2.AppendText("Liczba próbek: "+iloscPunktow + "\n");
 
                 if (iloscPunktow > 0)
@@ -237,6 +262,25 @@ namespace K_srednich_SSI
 
                 RTB2.AppendText("\n");
             }
+        }
+
+        public bool PorownajListy(List<Punkt> lista1, List<Punkt> lista2)
+        {
+            if (lista1 is null || lista2 is null) return false;
+            if (lista1.Count != lista2.Count) return false;
+
+            for (int i = 0; i < lista1.Count; i++)
+            {
+                bool x = (lista1[i].x == lista2[i].x);
+                bool y = (lista1[i].y == lista2[i].y);
+
+                if (x == false || y == false)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
     }

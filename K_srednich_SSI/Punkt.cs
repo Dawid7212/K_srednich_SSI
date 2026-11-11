@@ -15,5 +15,9 @@ namespace K_srednich_SSI
             y = startY;
             klasa = k;
         }
+        public Punkt GlebokaKopia()
+        {
+            return new Punkt(this.x, this.y, this.klasa);
+        }
     }
 }

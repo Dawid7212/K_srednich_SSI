@@ -33,7 +33,6 @@
             label1 = new Label();
             label3 = new Label();
             button1 = new Button();
-            button2 = new Button();
             button3 = new Button();
             label2 = new Label();
             label4 = new Label();
@@ -81,23 +80,13 @@
             // 
             // button1
             // 
-            button1.Location = new Point(755, 369);
+            button1.Location = new Point(675, 379);
             button1.Name = "button1";
             button1.Size = new Size(75, 23);
             button1.TabIndex = 5;
             button1.Text = "Start";
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
-            // 
-            // button2
-            // 
-            button2.Location = new Point(674, 369);
-            button2.Name = "button2";
-            button2.Size = new Size(75, 23);
-            button2.TabIndex = 6;
-            button2.Text = "Refresh";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
             // 
             // button3
             // 
@@ -145,7 +134,6 @@
             Controls.Add(label4);
             Controls.Add(label2);
             Controls.Add(button3);
-            Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(label3);
             Controls.Add(label1);
@@ -167,7 +155,6 @@
         private Label label1;
         private Label label3;
         private Button button1;
-        private Button button2;
         private Button button3;
         private Label label2;
         private Label label4;
